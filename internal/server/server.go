@@ -1,14 +1,20 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
+
+	"github.com/seannyphoenix/plaza-api/internal/graphql"
 )
 
-// App is the main server
-func App() http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintf(w, "Terrible news")
-	})
+// Create the server
+func Create() *http.Server {
+	// get the graphql handler
+	handler, err := graphql.GQLHandler()
+	if err != nil {
+		panic(err)
+	}
+	return &http.Server{
+		Addr:    ":7890",
+		Handler: handler,
+	}
 }
