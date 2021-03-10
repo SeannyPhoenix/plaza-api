@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"log"
-	"strings"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsoncodec"
@@ -58,23 +57,4 @@ func collection(collectionName string) *mongo.Collection {
 	}
 	collections[collectionName] = database.Collection(collectionName)
 	return collections[collectionName]
-}
-
-func checkDup(err error) (bool, string) {
-	writeEx, ok := err.(mongo.WriteException)
-	if !ok {
-		return false, ""
-	}
-	for _, writeErr := range writeEx.WriteErrors {
-		if writeErr.Code == 11000 {
-			msg := writeErr.Message
-			if idx := strings.Index(msg, " index: "); idx >= 0 {
-				msg = msg[idx+8:]
-				if idx = strings.IndexRune(msg, ' '); idx >= 0 {
-					return true, msg[:idx]
-				}
-			}
-		}
-	}
-	return false, ""
 }

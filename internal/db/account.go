@@ -2,14 +2,16 @@ package db
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/seannyphoenix/plazaapi/internal/plazaerr"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Account ... xx
+// Account ... x
 type Account struct {
 	ID     uuid.UUID `bson:"_id" json:"id"`
 	Name   string    `bson:"name" json:"name"`
@@ -17,19 +19,36 @@ type Account struct {
 	Status string    `bson:"status" json:"status"`
 }
 
-// CreateAccount ... x
-func CreateAccount(ctx context.Context, a Account) error {
-	_, err := collection("account").InsertOne(ctx, a)
-	if dup, index := checkDup(err); dup {
-		switch index {
-		case "name":
-			return plazaerr.DuplicateAccount(index, "")
-		}
+type accountUpdate struct {
+	ID     uuid.UUID `bson:"-"`
+	Name   string    `bson:"name,omitempty"`
+	Email  string    `bson:"email,omitempty"`
+	Status string    `bson:"status,omitempty"`
+}
+
+// InitializeAccountCollection ... x
+func InitializeAccountCollection(ctx context.Context) error {
+	indexMod := mongo.IndexModel{
+		Keys: bson.D{
+			{Key: "name", Value: 1},
+			{Key: "email", Value: 1},
+		},
+		Options: options.Index().SetUnique(true),
 	}
+	_, err := collection("account").Indexes().CreateOne(ctx, indexMod)
 	return err
 }
 
-// GetAccountByID ... xxx
+// CreateAccount ... x
+func CreateAccount(ctx context.Context, a Account) error {
+	_, err := collection("account").InsertOne(ctx, a)
+	if mongo.IsDuplicateKeyError(err) {
+		return err
+	}
+	return nil
+}
+
+// GetAccountByID ... x
 func GetAccountByID(ctx context.Context, acctID uuid.UUID) (acct Account, err error) {
 	filter := bson.M{"_id": acctID}
 	err = collection("account").FindOne(
@@ -44,8 +63,7 @@ func GetAccountByID(ctx context.Context, acctID uuid.UUID) (acct Account, err er
 
 // DeleteAccount ... x
 func DeleteAccount(ctx context.Context, acctID uuid.UUID) error {
-	update := bson.M{"$set": bson.M{"status": false}}
-
+	update := bson.M{"$set": bson.M{"status": "inactive"}}
 	result := collection("account").FindOneAndUpdate(ctx, bson.M{"_id": acctID}, update)
 	return result.Err()
 }
@@ -53,15 +71,16 @@ func DeleteAccount(ctx context.Context, acctID uuid.UUID) error {
 // UpdateAccount ... x
 func UpdateAccount(ctx context.Context, a Account) error {
 	filter := bson.M{"_id": a.ID}
-	// update := bson.M{}
+	update := bson.M{"$set": accountUpdate(a)}
 	var acct Account
 	err := collection("account").FindOneAndUpdate(
 		ctx,
 		filter,
-		nil,
-	).Decode(acct)
+		update,
+	).Decode(&acct)
+	fmt.Printf("%+v\n", err)
 	if err == mongo.ErrNoDocuments {
-		err = plazaerr.ErrNotFound.Errorf("no account found for id: %s", a.ID.String())
+		return plazaerr.ErrNotFound.Errorf("no account found for id: %s", a.ID.String())
 	}
-	return nil
+	return err
 }

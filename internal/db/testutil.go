@@ -17,6 +17,7 @@ func initialize(t *testing.T) {
 // Cleanup after tests
 func cleanup() {
 	if IsConnected() {
+		collection("account").Drop(context.Background())
 		Disconnect(context.Background())
 	}
 }
