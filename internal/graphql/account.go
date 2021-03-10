@@ -40,7 +40,7 @@ var getAccount = &graphql.Field{
 }
 
 var createAccount = &graphql.Field{
-	Type: graphql.String,
+	Type: accountType,
 	Args: graphql.FieldConfigArgument{
 		"name": &graphql.ArgumentConfig{
 			Type: graphql.String,
@@ -52,15 +52,37 @@ var createAccount = &graphql.Field{
 	Resolve: db.CreateAccount,
 }
 
-// var updateAccount graphql.Field
+var updateAccount = &graphql.Field{
+	Type: graphql.String,
+	Args: graphql.FieldConfigArgument{
+		"id": &graphql.ArgumentConfig{
+			Type: graphql.String,
+		},
+		"name": &graphql.ArgumentConfig{
+			Type: graphql.String,
+		},
+		"email": &graphql.ArgumentConfig{
+			Type: graphql.String,
+		},
+	},
+	Resolve: db.UpdateAccount,
+}
 
-// var deleteAccount string
+var deleteAccount = &graphql.Field{
+	Type: graphql.Boolean,
+	Args: graphql.FieldConfigArgument{
+		"id": &graphql.ArgumentConfig{
+			Type: graphql.String,
+		},
+	},
+	Resolve: db.DeleteAccount,
+}
 
 func init() {
 	allTypes = append(allTypes, accountType)
 	// allQueries["me"] = me
 	allQueries["getAccount"] = getAccount
 	allMutations["createAccount"] = createAccount
-	// allMutations["updateAccount"] = updateAccount
-	// allMutations["deleteAccount"] = deleteAccount
+	allMutations["updateAccount"] = updateAccount
+	allMutations["deleteAccount"] = deleteAccount
 }
