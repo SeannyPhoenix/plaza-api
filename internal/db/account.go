@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/seannyphoenix/golang-graphql-mongodb/internal/plazaerr"
+	"github.com/seannyphoenix/plazaapi/internal/plazaerr"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )

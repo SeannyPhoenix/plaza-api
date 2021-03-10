@@ -1,4 +1,4 @@
-module github.com/seannyphoenix/golang-graphql-mongodb
+module github.com/seannyphoenix/plazaapi
 
 go 1.16
 
