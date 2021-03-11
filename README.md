@@ -5,7 +5,7 @@ Proposed hierarchy
 ```
 Community
 ├── Forum1
-│   ├── Section1
+│   ├── Topic1
 │   │   ├── Thread1
 │   │   │   ├── Post1
 │   │   │   ├── Post2
@@ -26,7 +26,7 @@ Community
 │   │       ├── Post2
 │   │       ├── Post3
 │   │       └── ...
-│   ├── Section2
+│   ├── Topic2
 │   │   ├── Thread1
 │   │   │   ├── Post1
 │   │   │   ├── Post2
@@ -36,7 +36,7 @@ Community
 │   │   │   └── ...
 │   │   └── Thread3
 │   │       └── ...
-│   └── Section3
+│   └── Topic3
 │       ├── Thread1
 │       │   └── ...
 │       ├── Thread2
@@ -44,28 +44,28 @@ Community
 │       └── Thread3
 │           └─ ...
 ├── Forum2
-│   ├── Section1
+│   ├── Topic1
 │   │   ├── Thread1
 │   │   │   └── ...
 │   │   ├── Thread2
 │   │   │   └── ...
 │   │   └── Thread3
 │   │       └── ...
-│   ├── Section2
+│   ├── Topic2
 │   │   ├── Thread1
 │   │   │   └── ...
 │   │   ├── ...
 │   │   └── ...
-│   └── Section3
+│   └── Topic3
 │       ├── Thread1
 │       │   └── ...
 │       ├── ...
 │       └── ...
 └── Forum3
-    ├── Section1
+    ├── Topic1
     │   └── ...
-    ├── Section2
+    ├── Topic2
     │   └── ...
-    └── Section3
+    └── Topic3
         └── ...
 ```
