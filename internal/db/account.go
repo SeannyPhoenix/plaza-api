@@ -28,14 +28,21 @@ type accountUpdate struct {
 
 // InitializeAccountCollection ... x
 func InitializeAccountCollection(ctx context.Context) error {
-	indexMod := mongo.IndexModel{
-		Keys: bson.D{
-			{Key: "name", Value: 1},
-			{Key: "email", Value: 1},
+	indexModels := []mongo.IndexModel{
+		{
+			Keys: bson.D{
+				{Key: "name", Value: 1},
+			},
+			Options: options.Index().SetUnique(true),
 		},
-		Options: options.Index().SetUnique(true),
+		{
+			Keys: bson.D{
+				{Key: "email", Value: 1},
+			},
+			Options: options.Index().SetUnique(true),
+		},
 	}
-	_, err := collection("account").Indexes().CreateOne(ctx, indexMod)
+	_, err := collection("account").Indexes().CreateMany(ctx, indexModels)
 	return err
 }
 
