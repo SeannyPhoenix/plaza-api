@@ -69,3 +69,7 @@ Community
     └── Topic3
         └── ...
 ```
+
+DB Diagram
+
+![db diagram](/documentation/db-diagram.png)
